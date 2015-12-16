@@ -1,0 +1,24 @@
+CREATE SCHEMA `transactions` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE `transactions`.`user` (
+  `iduser` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`iduser`),
+  UNIQUE INDEX `iduser_UNIQUE` (`iduser` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE `transactions`.`account` (
+  `idaccount` INT NOT NULL AUTO_INCREMENT,
+  `state` INT UNSIGNED NOT NULL,
+  `userid` INT NOT NULL,
+  PRIMARY KEY (`idaccount`),
+  UNIQUE INDEX `idaccount_UNIQUE` (`idaccount` ASC),
+  INDEX `keyuser_idx` (`userid` ASC),
+  CONSTRAINT `keyuser`
+    FOREIGN KEY (`userid`)
+    REFERENCES `transactions`.`user` (`iduser`)
+    ON DELETE CASCADE
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
