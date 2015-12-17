@@ -17,47 +17,27 @@ import static controller.HibernateUtil.getSessionFactory;
  */
 public class Manager {
 
+    private static Manager manager;
+
+    public static Manager getManager()
+    {
+        if(manager==null){
+            manager = new Manager();
+        }
+        return manager;
+    }
+
     public static void main(String...args) throws SQLException
     {
-        Manager manager = new Manager();
-        Account account = manager.getAccountById(1);
-        int i = account.getState();
-        System.out.println(i);
-
-        account.setState(i+1);
-
-        manager.updateAccount(account);
-
-        account.setState(400+i);
-
-        manager.addAccount(account);
-
-        List<Account> list = manager.getAllAccounts();
-
-        manager.deleteAccount(account);
-
-        System.out.println(list);
+        Account account = getManager().getAccountById(5);
+        account.setState(12345);
+        getManager().updateAccount(account);
 
         System.exit(1);
 
 
-/*        Session session = null;
-        Account account = null;
-
-            session = getSessionFactory().openSession();
-            account = (Account) session.load(Account.class, 1);
-
-
-        System.out.println(account.getState());*/
-
-/*        Session session = getSessionFactory().openSession();
-        Query query = session.createQuery("from Account where id=1");
-        System.out.println(query.getNamedParameters());*/
-
-
-
     }
-    //todo надо ли чтобы методы пробрасывали SQLException?
+
     public void addAccount(Account account) throws SQLException  {
         Session session = null;
         try {
@@ -73,7 +53,6 @@ public class Manager {
             }
         }
     }
-    //todo надо ли чтобы методы пробрасывали SQLException?
     public void updateAccount(Account account) throws SQLException   {
         Session session = null;
         try {
@@ -136,6 +115,29 @@ public class Manager {
                 session.close();
             }
         }
+    }
+
+    public boolean reduceAccount(Account account, int quantity) throws SQLException
+    {
+        int state = account.getState();
+        if(state - quantity >= 0)
+        {
+            account.setState(state - quantity);
+            updateAccount(account);
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean makeTransaction(Account accountFrom, Account accountTo, int quantity) throws SQLException
+    {
+        if(reduceAccount(accountFrom,quantity))
+        {
+            accountTo.setState(accountTo.getState()+quantity);
+            updateAccount(accountTo);
+            return true;
+        }
+        else return false;
     }
 
 

@@ -20,10 +20,10 @@
     <table class="table">
         <tr>
             <td>
-                <input type="submit" name="accounts" value="Accounts">
+                <input type="submit" name="accounts" value="Счета">
             </td>
             <td>
-                <input type="submit" name="transaction" value="Make a transaction">
+                <input type="submit" name="transaction" value="Сделать транзакцию">
             </td>
         </tr>
     </table>

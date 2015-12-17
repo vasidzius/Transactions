@@ -95,7 +95,6 @@
                     <input type="number" name="sumTransaction" min="1">
                 </td>
             </tr>
-            <%--todo почему кнопка на верх вылазит?--%>
         </table>
         <input type="submit" name="makeTransaction" value="Выполнить">
     </form>
@@ -125,11 +124,5 @@
     </form>
 </c:if>
 
-
-
-
-
-<%--<c:if test="${not empty param.accounts}"> Hello there</c:if>--%>
-<%--<c:if test="${request.getParameter(\"lang\")=='En'}"> selected="selected" </c:if>--%>
 </body>
 </html>
