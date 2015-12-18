@@ -1,12 +1,7 @@
 package controller;
 
 import model.Account;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,28 +12,17 @@ import static controller.HibernateUtil.getSessionFactory;
  */
 public class Manager {
 
-    private static Manager manager;
+    private static Manager instance;
 
-    public static Manager getManager()
+    public static  Manager getManager()
     {
-        if(manager==null){
-            manager = new Manager();
+        if(instance==null){
+            instance = new Manager();
         }
-        return manager;
+        return instance;
     }
-
-    public static void main(String...args) throws SQLException
-    {
-        Account account = getManager().getAccountById(5);
-        account.setState(12345);
-        getManager().updateAccount(account);
-
-        System.exit(1);
-
-
-    }
-
-    public void addAccount(Account account) throws SQLException  {
+//todo переписать под ID
+    public void addAccount(Account account)   {
         Session session = null;
         try {
             session = getSessionFactory().openSession();
@@ -53,23 +37,28 @@ public class Manager {
             }
         }
     }
-    public void updateAccount(Account account) throws SQLException   {
+    public void updateAccount(int account, int state)    {
+
         Session session = null;
         try {
+            Account account1 = getAccountById(account);
+            account1.setState(state);
+
             session = getSessionFactory().openSession();
             session.beginTransaction();
-            session.update(account);
+            session.update(account1);
             session.getTransaction().commit();
-        } catch (Exception e) {
+            } catch (Exception e) {
             //todo доавбить что-нибудь
-        } finally {
+            } finally {
             if (session != null && session.isOpen()) {
                 session.close();
             }
         }
     }
 
-    public Account getAccountById(Integer id) throws SQLException   {
+    synchronized public Account getAccountById(Integer id)    {
+
         Session session = null;
         Account account = null;
         try {
@@ -85,7 +74,7 @@ public class Manager {
         return account;
     }
 
-    public List<Account> getAllAccounts() throws SQLException {
+    public List<Account> getAllAccounts()  {
         Session session = null;
         List<Account> accountList = new ArrayList<Account>();
         try {
@@ -101,7 +90,7 @@ public class Manager {
         return accountList;
     }
 
-    public void deleteAccount(Account account) throws SQLException {
+    public void deleteAccount(Account account)  {
         Session session = null;
         try {
             session = getSessionFactory().openSession();
@@ -117,28 +106,25 @@ public class Manager {
         }
     }
 
-    public boolean reduceAccount(Account account, int quantity) throws SQLException
+    public boolean reduceAccount(int account, int quantity)
     {
-        int state = account.getState();
-        if(state - quantity >= 0)
-        {
-            account.setState(state - quantity);
-            updateAccount(account);
+        int state = instance.getAccountById(account).getState();
+        if (state - quantity >= 0) {
+            updateAccount(account, state - quantity );
             return true;
+        } else return false;
+    }
+
+    synchronized public boolean makeTransaction(int accountFrom, int accountTo, int quantity)  {
+
+        if (accountFrom != accountTo) {
+            if (reduceAccount(accountFrom, quantity)) {
+                updateAccount(accountTo, instance.getAccountById(accountTo).getState() + quantity);
+                return true;
+            }
+            else return false;
         }
         else return false;
     }
-
-    public boolean makeTransaction(Account accountFrom, Account accountTo, int quantity) throws SQLException
-    {
-        if(reduceAccount(accountFrom,quantity))
-        {
-            accountTo.setState(accountTo.getState()+quantity);
-            updateAccount(accountTo);
-            return true;
-        }
-        else return false;
-    }
-
 
 }

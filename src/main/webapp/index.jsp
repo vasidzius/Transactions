@@ -11,56 +11,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Банк</title>
+    <title>Bank</title>
     <link rel='stylesheet' href='webjars/bootstrap/3.2.0/css/bootstrap.min.css'>
 </head>
 <body class="text-center">
-<h1 class="text-center"><a href="index.jsp">Банк</a></h1>
-<form method="get">
+<h1 class="text-center"><a href="index.jsp">Bank</a></h1>
+<form action="/managerServlet" method="get">
     <table class="table">
         <tr>
             <td>
-                <input type="submit" name="accounts" value="Счета">
+                <input type="submit" name="accounts" value="Accounts">
             </td>
             <td>
-                <input type="submit" name="transaction" value="Сделать транзакцию">
+                <input type="submit" name="transaction" value="Make a transaction">
             </td>
         </tr>
     </table>
 </form>
 
 
-<%--обработка кнопки "Счета"--%>
+<%--обработка кнопки "Accounts"--%>
 <c:if test="${not empty param.accounts}">
     <%--todo здесь должен вызываться сервлет по отображению БД таблица счет--%>
-    <h2>Счета</h2>
+    <h2>Accounts</h2>
     <br>
     <form method="get">
-        <input type="submit" name="addAccount" value="Добавить счет">
+        <input type="submit" name="addAccount" value="Add account">
     </form>
     <br>
     <form method="get">
         <table class="table">
             <tr >
-                <th class="text-center">Номер счета</th>
-                <th class="text-center">Состояние счета</th>
+                <th class="text-center">account #</th>
+                <th class="text-center">account state</th>
             </tr>
+            <c:forEach var="account" items="${data}">
             <tr>
-                <td>1</td>
-                <td>200</td>
+                <td>${account.id}</td>
+                <td>${account.state}</td>
                 <td>
-                    <input type="submit" name="addMoney" value="Пополнение">
+                    <input type="submit" name="addMoney" value="recharge state">
                 </td>
                 <td>
-                    <input type="submit" name="reduceMoney" value="Снятие">
+                    <input type="submit" name="reduceMoney" value="withdraw">
                 </td>
                 <td>
-                    <input type="submit" name="deleteAccount" value="Удалить счет">
+                    <input type="submit" name="deleteAccount" value="delete account">
                 </td>
                 <td>
-                    <input type="submit" name="information" value="Подробная информация">
+                    <input type="submit" name="information" value="Information">
                 </td>
             </tr>
+            </c:forEach>
 
         </table>
     </form>
@@ -68,11 +70,11 @@
 
 <%--Обработка кнопки "Выполнить транзакцию--%>
 <c:if test="${not empty param.transaction}">
-    <h2>Транзакция</h2>
+    <h2>Transaction</h2>
     <form method="get">
         <table class="table">
             <tr>
-                <td>Снять со счета № </td>
+                <td>from account # </td>
                 <td>
                     <select name="selectAccountFrom">
                         <option value="1">1</option>
@@ -81,7 +83,7 @@
                 </td>
             </tr>
             <tr>
-                <td>Зачислить на счет № </td>
+                <td>to account # </td>
                 <td>
                     <select name="selectAccountTo">
                         <option value="1">1</option>
@@ -96,7 +98,7 @@
                 </td>
             </tr>
         </table>
-        <input type="submit" name="makeTransaction" value="Выполнить">
+        <input type="submit" name="makeTransaction" value="commit">
     </form>
 </c:if>
 
@@ -114,10 +116,10 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" name="createAccount" value="Создать счет">
+                    <input type="submit" name="createAccount" value="create account">
                 </td>
                 <td>
-                    <input type="submit" name="cancelCreateAccount" value="Отмена">
+                    <input type="submit" name="cancelCreateAccount" value="cancel">
                 </td>
             </tr>
         </table>
