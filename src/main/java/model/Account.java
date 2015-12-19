@@ -19,6 +19,12 @@ public class Account {
     @Column(name = "state", length = 11)
     private Integer state;
 
+    public Account(){};
+
+    public Account(int state) {
+        this.state = state;
+    }
+
     public Integer getId() {
         return id;
     }

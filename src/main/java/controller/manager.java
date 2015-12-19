@@ -1,6 +1,7 @@
 package controller;
 
 import model.Account;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,6 @@ public class Manager {
         }
         return instance;
     }
-//todo переписать под ID
     public void addAccount(Account account)   {
         Session session = null;
         try {
@@ -43,7 +43,6 @@ public class Manager {
         try {
             Account account1 = getAccountById(account);
             account1.setState(state);
-
             session = getSessionFactory().openSession();
             session.beginTransaction();
             session.update(account1);
@@ -79,7 +78,9 @@ public class Manager {
         List<Account> accountList = new ArrayList<Account>();
         try {
             session = getSessionFactory().openSession();
-            accountList = session.createCriteria(Account.class).list();
+            Query query = session.createQuery("from Account ");
+            accountList = query.list();
+            //accountList = session.createCriteria(Account.class).list();
         } catch (Exception e) {
             //todo доавбить что-нибудь
         } finally {
@@ -90,12 +91,13 @@ public class Manager {
         return accountList;
     }
 
-    public void deleteAccount(Account account)  {
+    public void deleteAccount(int account)  {
         Session session = null;
         try {
             session = getSessionFactory().openSession();
             session.beginTransaction();
-            session.delete(account);
+            Query q = session.createQuery("delete Account where id = "+account);
+            q.executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             //todo доавбить что-нибудь

@@ -35,7 +35,6 @@ public class HibernateUtil {
         }
     }
 
-    //todo возможно нужно сделать метод синхронизированным
     public static SessionFactory getSessionFactory() {
         if(sessionFactory == null) sessionFactory = buildSessionFactory();
         return sessionFactory;
