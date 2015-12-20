@@ -77,8 +77,8 @@ public class ManagerServlet extends HttpServlet {
             {
                 int rechargeSum = Integer.parseInt(request.getParameter("rechargeSum"));
                 int id = Integer.parseInt(request.getParameter("id"));
-                int state = Integer.parseInt(request.getParameter("state"));
-                getManager().updateAccount(id,state + rechargeSum);
+                //int state = Integer.parseInt(request.getParameter("state"));
+                getManager().updateAccount(id, rechargeSum);
                 response.sendRedirect("/managerServlet?accounts=Accounts");
             }
         }
@@ -94,7 +94,7 @@ public class ManagerServlet extends HttpServlet {
             {
                 int withdrawSum = Integer.parseInt(request.getParameter("withdrawSum"));
                 int id = Integer.parseInt(request.getParameter("id"));
-                if (getManager().reduceAccount(id, withdrawSum))
+                if (getManager().updateAccount(id, -withdrawSum))
                     response.sendRedirect("/managerServlet?accounts=Accounts");
                 else
                 {//недостаточно средств на счету

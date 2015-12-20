@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import model.Account;
 import org.hibernate.Session;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static controller.HibernateUtil.getSessionFactory;
@@ -37,8 +36,8 @@ public class ManagerTest extends TestCase {
             Account account = list.get(0);
             int state = account.getState();
             int quantity = state + 1;
-            assertFalse(getManager().reduceAccount(account.getId(), quantity));
-            assertTrue(getManager().reduceAccount(account.getId(), quantity - 1));
+            assertFalse(getManager().updateAccount(account.getId(), quantity));
+            assertTrue(getManager().updateAccount(account.getId(), quantity - 1));
         }
     }
 
